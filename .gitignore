@@ -7,8 +7,11 @@
 # 1. Generated Diagnostic & Forensic Outputs (Host-Specific Telemetry)
 # ------------------------------------------------------------------------------
 # Raw privileged hardware/kernel dumps and persisted forensic evaluations
-/system-reports/
-/forensic-reports/
+# (Preserve directory README.md documentation in version control)
+/system-reports/*
+!/system-reports/README.md
+/forensic-reports/*
+!/forensic-reports/README.md
 
 # Guard against stray report files written outside target directories
 *[-_]report.txt

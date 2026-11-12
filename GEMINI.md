@@ -45,6 +45,12 @@ redundant storage reliability.
 
 ```text
 system-health-checks/
+├── assets/                       # Repository visual & design assets
+│   ├── banners/                  # Repository & profile banners
+│   ├── diagrams/                 # Architecture & UML/ERD diagrams
+│   ├── icons/                    # Logos, badges & iconography
+│   ├── misc/                     # Miscellaneous static images
+│   └── screenshots/              # UI & CLI diagnostic screenshots
 ├── forensic-reports/             # Local Markdown forensic reports (ignored)
 │   └── YYYY-MM-DD-HHMM-forensic-report.md
 ├── system-checks/                # Privileged diagnostic shell scripts (.sh)
@@ -335,6 +341,8 @@ both core evaluation questions:
   historical records**. Never delete, move, or overwrite prior forensic   
   assessments in `forensic-reports/` (or raw dumps in `system-reports/`   
   outside requested diagnostic runs) without explicit user instruction.   
+- **Asset Boundaries:** Never overwrite, delete, or relocate binary files   
+  in `assets/` without explicit user instruction.   
 - **Bash Scripting Standards:**   
   - Target `#!/bin/bash`, enforce `EUID -eq 0` checks on privileged   
     scripts, and validate clean syntax/linting via `bash -n` and   
@@ -360,7 +368,7 @@ both core evaluation questions:
   intact unless refactoring is explicitly requested.   
 - **Markdown 80-Column Line Width & Hard Line Breaks:** Across all Markdown   
   files, forensic report artifacts, documentation, and GitHub issue/release   
-  bodies (except `README.md`; see exception below):   
+  bodies (except `README.md` files; see exception below):   
   - Enforce hard line breaks at a maximum width of **80 characters** per   
     line (including tables, diagrams, and code blocks; place long   
     unbreakable `file://` links on dedicated bullet lines).   
@@ -369,12 +377,13 @@ both core evaluation questions:
     blockquotes) by appending **3 trailing spaces** (`   `) at the end of   
     each line (so visible text is `<= 77` characters plus `3` trailing   
     spaces).   
-  - **Root `README.md` Exception:** `README.md` wraps prose, lists,   
-    blockquotes, and tables in `<div align="justify">` blocks (without   
-    `---` section dividers) and keeps each paragraph or list item on a   
-    single unwrapped line ending with `3` trailing spaces (`   `) so GitHub   
-    renders full-width justification cleanly; fenced code blocks in   
-    `README.md` still remain `<= 80` characters per line.   
+  - **`README.md` Exception:** Repository `README.md` files (`README.md`   
+    and `**/README.md`) wrap prose, lists, blockquotes, and tables in   
+    `<div align="justify">` blocks (without `---` section dividers) and   
+    keep each paragraph or list item on a single unwrapped line ending   
+    with `3` trailing spaces (`   `) so GitHub renders full-width   
+    justification cleanly; fenced code blocks still remain `<= 80`   
+    characters per line.   
 
 ---
 

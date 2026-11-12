@@ -27,6 +27,12 @@
 
 ```text
 system-health-checks/
+├── assets/                       # Repository visual & design assets
+│   ├── banners/                  # Repository & profile banners
+│   ├── diagrams/                 # Architecture & UML/ERD diagrams
+│   ├── icons/                    # Logos, badges & iconography
+│   ├── misc/                     # Miscellaneous static images
+│   └── screenshots/              # UI & CLI diagnostic screenshots
 ├── forensic-reports/             # Local Markdown forensic reports (ignored)
 │   └── YYYY-MM-DD-HHMM-forensic-report.md
 ├── system-checks/                # Privileged diagnostic shell scripts (.sh)
@@ -159,6 +165,6 @@ shellcheck -S warning run_checks.sh system-checks/*.sh
 
 <div align="justify">
 
-- **Documentation Standards:** Standardise on British English (`en-GB`) and enforce a strict `<= 80` character line width with 3 trailing spaces on all non-heading, non-table, and non-code-block text lines across forensic reports, agent instructions, and issue/release bodies (`README.md` is exempt from hard 80-column line breaks where `<div align="justify">` blocks require unwrapped single-line paragraphs and list items).   
+- **Documentation Standards:** Standardise on British English (`en-GB`) and enforce a strict `<= 80` character line width with 3 trailing spaces on all non-heading, non-table, and non-code-block text lines across forensic reports, agent instructions, and issue/release bodies (`README.md` files are exempt from hard 80-column line breaks where `<div align="justify">` blocks require unwrapped single-line paragraphs and list items).   
 
 </div>
