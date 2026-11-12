@@ -187,3 +187,12 @@ shellcheck -S warning run_checks.sh system-checks/*.sh
 - **Documentation Standards:** Standardise on British English (`en-GB`) and enforce a strict `<= 80` character line width with 3 trailing spaces on all non-heading, non-table, and non-code-block text lines across forensic reports, agent instructions, and issue/release bodies (`README.md` files are exempt from hard 80-column line breaks where `<div align="justify">` blocks require unwrapped single-line paragraphs and list items).   
 
 </div>
+
+## Licence
+
+<div align="justify">
+
+The `system-health-checks` source code and documentation are open source and provided under the [MIT License](https://github.com/benweston/system-health-checks/blob/main/LICENSE), excluding personal photography (`src/assets/`) and third-party media noted below, which remain subject to their respective copyright and licence terms.   
+Banner image taken from a photo by [Vishnu Mohanan](https://unsplash.com/@vishnumaiea) on [Unsplash](https://unsplash.com/photos/close-up-of-dark-blue-circuit-board-pfR18JNEMv8) and is licensed separately under the [Unsplash License](https://unsplash.com/license).   
+
+</div>
