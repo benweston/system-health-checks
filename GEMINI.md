@@ -45,6 +45,9 @@ redundant storage reliability.
 
 ```text
 system-health-checks/
+├── .githooks/                    # Version-controlled Git client hooks
+│   ├── README.md                 # Git hooks directory documentation
+│   └── pre-commit                # Telemetry, secret & ShellCheck gate
 ├── assets/                       # Repository visual & design assets
 │   ├── banners/                  # Repository & profile banners
 │   │   ├── README.md             # Banners directory documentation
@@ -356,11 +359,12 @@ both core evaluation questions:
   in `assets/` without explicit user instruction.   
 - **Bash Scripting Standards:**   
   - Target `#!/bin/bash`, enforce `EUID -eq 0` checks on privileged   
-    scripts, and validate clean syntax/linting via `bash -n` and   
-    `shellcheck -S warning`.   
-  - Resolve `REPORT_DIR` dynamically relative to the repository rather than   
-    hardcoding external user paths, and restore file ownership to   
-    `$SUDO_USER` when invoked under `sudo`.   
+    scripts, and validate clean syntax/linting across scripts and hooks   
+    via `bash -n` and `shellcheck -S warning`.   
+  - Resolve `REPORT_DIR` dynamically relative to the repository, refuse   
+    symlinked output paths, enforce `umask 077` (`0600` report files),   
+    and restore `$SUDO_USER` ownership without dereferencing symlinks   
+    (`chown -h` / `chown -hR`).   
   - Degrade gracefully with clear diagnostic notes when optional CLI   
     utilities (`smartctl`, `nvme`, `fwupdmgr`, `boltctl`, `tpm2_pcrread`)   
     are absent rather than aborting mid-report.   

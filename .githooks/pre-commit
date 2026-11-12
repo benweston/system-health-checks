@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# Pre-Commit Telemetry, Secret & Shell Quality Gate
+# Blocks accidental commits of raw host reports, hardware identifiers, private
+# keys, local home paths, and shell syntax/lint regressions.
+# Enable via: git config core.hooksPath .githooks
+
+set -uo pipefail
+
+STAGED_FILES=()
+mapfile -d '' -t STAGED_FILES < <(
+    git diff --cached --name-only --diff-filter=ACMR -z
+)
+
+if [ "${#STAGED_FILES[@]}" -eq 0 ]; then
+    exit 0
+fi
+
+BLOCKED=0
+
+# 1. Block force-staged telemetry dumps, forensic snapshots, keys & IDE state
+for file in "${STAGED_FILES[@]}"; do
+    case "$file" in
+        system-reports/README.md|forensic-reports/README.md)
+            ;;
+        system-reports/*|forensic-reports/*|*[-_]report.txt|*-forensic-report.md)
+            echo "[-] pre-commit: Blocked host telemetry/forensic report: $file" >&2
+            BLOCKED=1
+            ;;
+        *.pem|*.key|*.pkcs8|*.p12|*.pfx|*.esl|*.auth|id_rsa*|id_ecdsa*|id_ed25519*)
+            echo "[-] pre-commit: Blocked cryptographic key/credential file: $file" >&2
+            BLOCKED=1
+            ;;
+        *.sublime-project|*.sublime-workspace)
+            echo "[-] pre-commit: Blocked local IDE workspace file: $file" >&2
+            BLOCKED=1
+            ;;
+    esac
+done
+
+# 2. Scan staged added lines for hardware identifiers, keys & local paths
+CONTENT_FILES=()
+for file in "${STAGED_FILES[@]}"; do
+    if [ "$file" != ".githooks/pre-commit" ]; then
+        CONTENT_FILES+=("$file")
+    fi
+done
+
+if [ "${#CONTENT_FILES[@]}" -gt 0 ]; then
+    ADDED_LINES="$(
+        git diff --cached -U0 -- "${CONTENT_FILES[@]}" \
+            | grep -E '^\+[^+]' || true
+    )"
+
+    if [ -n "$ADDED_LINES" ]; then
+        # Private key headers
+        if printf '%s\n' "$ADDED_LINES" | grep -Eq \
+            -e '-----BEGIN ([A-Z0-9 ]+ )?PRIVATE KEY-----'; then
+            echo "[-] pre-commit: Private key header detected in staged diff." >&2
+            BLOCKED=1
+        fi
+
+        # Populated dmidecode / nvme-cli serial numbers & rendered Host headers
+        if printf '%s\n' "$ADDED_LINES" | grep -Eq \
+            -e '^\+[[:space:]]*(Serial Number:[[:space:]]*[A-Za-z0-9-]{5,}|sn[[:space:]]*:[[:space:]]*[A-Za-z0-9._-]{5,}|Host:[[:space:]]+[^$`[:space:]])'; then
+            echo "[-] pre-commit: Raw host/serial telemetry detected in staged diff." >&2
+            BLOCKED=1
+        fi
+
+        # Non-nil RFC 4122 UUIDs (e.g. LUKS, Btrfs, ext4, mdadm, SMBIOS)
+        UUID_HITS="$(
+            printf '%s\n' "$ADDED_LINES" \
+                | grep -Eo -e '[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}' \
+                | grep -Ev -e '^00000000-0000-0000-0000-000000000000$' || true
+        )"
+        if [ -n "$UUID_HITS" ]; then
+            echo "[-] pre-commit: Hardware/filesystem UUID detected in staged diff." >&2
+            BLOCKED=1
+        fi
+
+        # Non-broadcast / non-zero MAC addresses
+        MAC_HITS="$(
+            printf '%s\n' "$ADDED_LINES" \
+                | grep -Eo -e '\b([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b' \
+                | grep -Eiv -e '^(00:00:00:00:00:00|ff:ff:ff:ff:ff:ff)$' || true
+        )"
+        if [ -n "$MAC_HITS" ]; then
+            echo "[-] pre-commit: Hardware MAC address detected in staged diff." >&2
+            BLOCKED=1
+        fi
+
+        # Hardcoded local Linux user home directory paths
+        if printf '%s\n' "$ADDED_LINES" | grep -Eq -e '/home/[A-Za-z0-9._-]+'; then
+            echo "[-] pre-commit: Local /home/<user> path detected in staged diff." >&2
+            BLOCKED=1
+        fi
+    fi
+fi
+
+# 3. Validate shell syntax and ShellCheck on staged shell scripts and hooks
+SHELL_TARGETS=()
+for file in "${STAGED_FILES[@]}"; do
+    case "$file" in
+        *.sh|.githooks/pre-commit)
+            if [ -f "$file" ]; then
+                SHELL_TARGETS+=("$file")
+            fi
+            ;;
+    esac
+done
+
+if [ "${#SHELL_TARGETS[@]}" -gt 0 ]; then
+    if ! bash -n "${SHELL_TARGETS[@]}"; then
+        echo "[-] pre-commit: bash -n syntax check failed." >&2
+        BLOCKED=1
+    fi
+
+    if command -v shellcheck &> /dev/null; then
+        if ! shellcheck -S warning "${SHELL_TARGETS[@]}"; then
+            echo "[-] pre-commit: shellcheck validation failed." >&2
+            BLOCKED=1
+        fi
+    fi
+fi
+
+if [ "$BLOCKED" -ne 0 ]; then
+    echo "[-] Commit aborted by .githooks/pre-commit security & quality gate." >&2
+    exit 1
+fi
+
+exit 0

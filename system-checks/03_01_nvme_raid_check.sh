@@ -15,8 +15,16 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 REPORT_DIR="${PROJECT_ROOT}/system-reports"
 REPORT_FILE="${REPORT_DIR}/03_01_nvme_raid_report.txt"
 
-# Ensure destination directory exists
+# Refuse symlinked report directory or output file when running as root
+if [ -L "$REPORT_DIR" ] || [ -L "$REPORT_FILE" ]; then
+    echo "[-] Error: Refusing to write to symbolic link: $REPORT_FILE" >&2
+    exit 1
+fi
+
+# Ensure destination directory exists and enforce 0600 report permissions
 mkdir -p "$REPORT_DIR"
+umask 077
+rm -f "$REPORT_FILE"
 
 # Initialize report header
 echo "==================================================" > "$REPORT_FILE"
@@ -126,9 +134,9 @@ echo "==================================================" >> "$REPORT_FILE"
 echo "            END OF DIAGNOSTIC REPORT              " >> "$REPORT_FILE"
 echo "==================================================" >> "$REPORT_FILE"
 
-# Restore non-root ownership when executed via sudo
+# Restore non-root ownership without dereferencing symlinks when executed via sudo
 if [ -n "${SUDO_USER:-}" ]; then
-    chown "${SUDO_USER}:$(id -gn "$SUDO_USER")" "$REPORT_DIR" "$REPORT_FILE"
+    chown -h "${SUDO_USER}:$(id -gn "$SUDO_USER")" "$REPORT_DIR" "$REPORT_FILE"
 fi
 
 # Output completion status to stdout

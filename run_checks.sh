@@ -34,6 +34,11 @@ if [ "$TOTAL" -eq 0 ]; then
     exit 1
 fi
 
+if [ -L "$REPORT_DIR" ]; then
+    echo "[-] Error: Refusing to use symbolic link as reports directory: $REPORT_DIR" >&2
+    exit 1
+fi
+
 mkdir -p "$REPORT_DIR"
 
 echo "=================================================="
@@ -64,9 +69,9 @@ for script in "${CHECKS[@]}"; do
     fi
 done
 
-# Ensure non-root ownership across generated reports when executed via sudo
+# Ensure non-root ownership without dereferencing symlinks when executed via sudo
 if [ -n "${SUDO_USER:-}" ] && [ -d "$REPORT_DIR" ]; then
-    chown -R "${SUDO_USER}:$(id -gn "$SUDO_USER")" "$REPORT_DIR"
+    chown -hR "${SUDO_USER}:$(id -gn "$SUDO_USER")" "$REPORT_DIR"
 fi
 
 echo ""

@@ -37,6 +37,9 @@
 
 ```text
 system-health-checks/
+├── .githooks/                    # Version-controlled Git client hooks
+│   ├── README.md                 # Git hooks directory documentation
+│   └── pre-commit                # Telemetry, secret & ShellCheck gate
 ├── assets/                       # Repository visual & design assets
 │   ├── banners/                  # Repository & profile banners
 │   │   ├── README.md             # Banners directory documentation
@@ -173,15 +176,24 @@ Full analytical playbooks, scoring rubrics, and agent guardrails are defined in 
 
 <div align="justify">
 
-- **Read-Only Telemetry Collection:** All scripts in `system-checks/` are strictly observational and perform zero state-mutating operations on firmware, bootloaders, storage arrays, or system packages.   
-- **Telemetry Isolation & Redaction:** Host-specific outputs in `system-reports/` and `forensic-reports/` are excluded via `.gitignore`.  Never commit raw hardware serial numbers, filesystem/LUKS UUIDs, MAC addresses, or personal identifiers to versioned files or issues.   
-- **Shell Quality Gates:** Validate all shell script modifications cleanly before staging:   
+- **Read-Only & Symlink-Safe Execution:** All scripts in `system-checks/` are strictly observational and perform zero state-mutating operations on firmware, bootloaders, storage arrays, or system packages. Root collectors refuse symlinked output targets, enforce `0600` (`umask 077`) owner-only report permissions, and restore `$SUDO_USER` ownership via `chown -h` (`--no-dereference`).   
+- **Telemetry Isolation & Pre-Commit Gate:** Host-specific outputs in `system-reports/` and `forensic-reports/` are excluded via `.gitignore`. Enable the versioned pre-commit hook to block force-staged reports, hardware serials, UUIDs, MAC addresses, private keys, and local `/home/` paths prior to commit:   
 
 </div>
 
 ```bash
-bash -n run_checks.sh system-checks/*.sh
-shellcheck -S warning run_checks.sh system-checks/*.sh
+git config core.hooksPath .githooks
+```
+
+<div align="justify">
+
+- **Shell Quality Gates:** Validate all shell scripts and hooks cleanly before staging (also enforced automatically on staged scripts when `.githooks/pre-commit` is active):   
+
+</div>
+
+```bash
+bash -n run_checks.sh system-checks/*.sh .githooks/pre-commit
+shellcheck -S warning run_checks.sh system-checks/*.sh .githooks/pre-commit
 ```
 
 <div align="justify">
