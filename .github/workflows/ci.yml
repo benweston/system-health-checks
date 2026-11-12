@@ -1,0 +1,42 @@
+name: CI Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Shell Quality & Telemetry Isolation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify telemetry & secret file isolation
+        run: |
+          LEAKS="$(
+            git ls-files | grep -E \
+              '^(system-reports/|forensic-reports/)' | grep -Ev \
+              '^(system-reports|forensic-reports)/README\.md$' || true
+          )"
+          if [ -n "$LEAKS" ]; then
+            echo "[-] Tracked host report files detected:" >&2
+            echo "$LEAKS" >&2
+            exit 1
+          fi
+
+      - name: Validate Bash syntax
+        run: bash -n run_checks.sh system-checks/*.sh .githooks/pre-commit
+
+      - name: Run ShellCheck static analysis
+        run: |
+          shellcheck -S warning \
+            run_checks.sh system-checks/*.sh .githooks/pre-commit

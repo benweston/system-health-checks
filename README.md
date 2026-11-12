@@ -10,6 +10,10 @@
 
 # System Health Checks
 
+[![CI](https://github.com/benweston/system-health-checks/actions/workflows/ci.yml/badge.svg)](https://github.com/benweston/system-health-checks/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/benweston/system-health-checks?color=blue&label=release)](https://github.com/benweston/system-health-checks/releases)
+[![Licence: MIT](https://img.shields.io/badge/Licence-MIT-green.svg)](https://github.com/benweston/system-health-checks/blob/main/LICENSE)
+
 <div align="justify">
 
 > Automated bare-metal diagnostic collection and longitudinal forensic analysis for enterprise Linux mobile workstations.   
@@ -37,6 +41,9 @@
 
 ```text
 system-health-checks/
+├── .github/                      # GitHub Actions workflows & CI config
+│   └── workflows/                # Automated CI validation pipelines
+│       └── ci.yml                # Shell syntax, ShellCheck & telemetry CI
 ├── .githooks/                    # Version-controlled Git client hooks
 │   ├── README.md                 # Git hooks directory documentation
 │   └── pre-commit                # Telemetry, secret & ShellCheck gate

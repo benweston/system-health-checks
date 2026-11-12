@@ -45,6 +45,9 @@ redundant storage reliability.
 
 ```text
 system-health-checks/
+├── .github/                      # GitHub Actions workflows & CI config
+│   └── workflows/                # Automated CI validation pipelines
+│       └── ci.yml                # Shell syntax, ShellCheck & telemetry CI
 ├── .githooks/                    # Version-controlled Git client hooks
 │   ├── README.md                 # Git hooks directory documentation
 │   └── pre-commit                # Telemetry, secret & ShellCheck gate
