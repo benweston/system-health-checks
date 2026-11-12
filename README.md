@@ -4,16 +4,12 @@
 
 `system-health-checks` executes privileged, read-only shell scripts in `system-checks/` to capture kernel, firmware, security, PCIe, and redundant NVMe RAID1 telemetry into `system-reports/`. Raw captures are then audited against structured engineering playbooks in `GEMINI.md` and persisted as immutable, timestamped evaluations in `forensic-reports/`.   
 
----
-
 ## Target Architecture & Operational Baseline
 
 - **Hardware Platform:** Lenovo ThinkPad mobile workstation (P16 series) with hybrid graphics (Intel iGPU + discrete NVIDIA RTX Laptop GPU), discrete TPM 2.0, and Thunderbolt / USB4 controllers.   
 - **Operating System & Boot Chain:** Fedora Linux Workstation with UEFI Secure Boot (MOK enforced) and `GRUB2` / `shim` (`systemd-boot` fallback supported).   
 - **Storage Topology:** Dual physical NVMe SSDs configured with Linux `mdadm` Software RAID1 (`md0` backing `/boot` on `ext4`; `md127` backing a `LUKS2` container formatted with `Btrfs` for `/`), paired with `zram` swap.   
 - **Power & Session Policy:** Continuous AC operation with Embedded Controller (EC) battery charge thresholds capped at `75%–80%`, `HandleLidSwitch=lock` (`S0` session persistence with the lid closed), and the `performance` (`throughput-performance`) ACPI/`TuneD` profile.   
-
----
 
 ## Repository Structure
 
@@ -36,8 +32,6 @@ system-health-checks/
 └── run_checks.sh                 # Root master runner for all check scripts
 ```
 
----
-
 ## Prerequisites
 
 Diagnostic scripts target `#!/bin/bash` on Fedora Linux Workstation and require `root` privileges (`sudo`) to read SMBIOS/DMI tables, kernel ring buffers, NVMe controller logs, SMART attributes, `mdadm` superblocks, and TPM 2.0 PCR banks.   
@@ -45,7 +39,7 @@ Diagnostic scripts target `#!/bin/bash` on Fedora Linux Workstation and require 
 Each script degrades gracefully if optional utilities are absent, recording an inline diagnostic note rather than aborting execution. Full telemetry coverage uses the following packages:   
 
 | Subsystem             | CLI Utilities                                     |
-| :-------------------- | :------------------------------------------------ |
+|-- | |
 | Core & Kernel         | `journalctl`, `dmesg`, `systemctl`, `coredumpctl` |
 | Platform & UEFI/TPM2  | `dmidecode`, `mokutil`, `tpm2_pcrread`, `bootctl` |
 | Firmware & Buses      | `fwupdmgr`, `boltctl`, `lspci`, `nvidia-smi`      |
@@ -57,8 +51,6 @@ On Fedora Workstation, ensure optional hardware inspection tools are present via
 sudo dnf install dmidecode mokutil tpm2-tools fwupd bolt pciutils \
     mdadm btrfs-progs nvme-cli smartmontools
 ```
-
----
 
 ## Usage
 
@@ -81,14 +73,12 @@ sudo ./system-checks/03_01_nvme_raid_check.sh
 ```
 
 | Script (`system-checks/`)  | Output (`system-reports/`)   | Scope           |
-| :------------------------- | :--------------------------- | :-------------- |
+|- | |-- |
 | `01_01_system_check.sh`    | `01_01_system_report.txt`    | Kernel/Session  |
 | `02_01_firmware_check.sh`  | `02_01_firmware_report.txt`  | Firmware/TPM2   |
 | `03_01_nvme_raid_check.sh` | `03_01_nvme_raid_report.txt` | NVMe/RAID1/PCIe |
 
 When invoked via `sudo`, both `run_checks.sh` and each individual check script automatically restore `$SUDO_USER` ownership on `system-reports/` and generated report artefacts.   
-
----
 
 ## Forensic Audit Workflow
 
@@ -99,8 +89,6 @@ Full analytical playbooks, scoring rubrics, and agent guardrails are defined in 
 3. **NVMe RAID1 & Storage Forensics (`03_01`):** Audits `mdadm` RAID1 health (`[UU]`, intent bitmaps, superblocks), `LUKS2`/`Btrfs` mappings, per-drive NVMe SMART/error logs, and PCIe `LnkCap` vs `LnkSta` lane and transfer-speed negotiation.   
 4. **Longitudinal Delta Tracking:** Compares each capture against the preceding `YYYY-MM-DD-HHMM-forensic-report.md` snapshot in `forensic-reports/`, keying physical NVMe monotonic counters strictly by PCIe BDF slot address (`nvme list-subsys`) rather than volatile `/dev/nvmeX` names.   
 5. **Executive Triage:** Concludes every audit with a transparent **System Health Score (`1–10`)** across all three domains and an unambiguous **Immediate Critical Issues Gate (`Yes / No`)**.   
-
----
 
 ## Safety, Privacy & Coding Standards
 
