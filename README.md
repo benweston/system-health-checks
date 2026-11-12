@@ -39,7 +39,8 @@
 system-health-checks/
 ├── assets/                       # Repository visual & design assets
 │   ├── banners/                  # Repository & profile banners
-│   │   └── README.md             # Banners directory documentation
+│   │   ├── README.md             # Banners directory documentation
+│   │   └── main-banner.png       # Primary repository header banner
 │   ├── diagrams/                 # Architecture & UML/ERD diagrams
 │   │   └── README.md             # Diagrams directory documentation
 │   ├── icons/                    # Logos, badges & iconography
@@ -65,6 +66,7 @@ system-health-checks/
 ├── .gitignore                    # Excludes reports, workspace & secrets
 ├── AGENTS.md                     # Symlink to GEMINI.md for compatibility
 ├── GEMINI.md                     # Canonical agent instructions & playbooks
+├── LICENSE                       # MIT License terms & copyright notice
 ├── README.md                     # Project overview & operator documentation
 └── run_checks.sh                 # Root master runner for all check scripts
 ```
@@ -192,7 +194,7 @@ shellcheck -S warning run_checks.sh system-checks/*.sh
 
 <div align="justify">
 
-The `system-health-checks` source code and documentation are open source and provided under the [MIT License](https://github.com/benweston/system-health-checks/blob/main/LICENSE), excluding personal photography (`src/assets/`) and third-party media noted below, which remain subject to their respective copyright and licence terms.   
+The `system-health-checks` source code and documentation are open source and provided under the [MIT License](https://github.com/benweston/system-health-checks/blob/main/LICENSE), excluding binary media in `assets/` and third-party photography noted below, which remain subject to their respective copyright and licence terms.   
 Banner image taken from a photo by [Vishnu Mohanan](https://unsplash.com/@vishnumaiea) on [Unsplash](https://unsplash.com/photos/close-up-of-dark-blue-circuit-board-pfR18JNEMv8) and is licensed separately under the [Unsplash License](https://unsplash.com/license).   
 
 </div>
