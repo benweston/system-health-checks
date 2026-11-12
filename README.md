@@ -29,20 +29,29 @@
 system-health-checks/
 ├── assets/                       # Repository visual & design assets
 │   ├── banners/                  # Repository & profile banners
+│   │   └── README.md             # Banners directory documentation
 │   ├── diagrams/                 # Architecture & UML/ERD diagrams
+│   │   └── README.md             # Diagrams directory documentation
 │   ├── icons/                    # Logos, badges & iconography
+│   │   └── README.md             # Icons directory documentation
 │   ├── misc/                     # Miscellaneous static images
-│   └── screenshots/              # UI & CLI diagnostic screenshots
+│   │   └── README.md             # Misc assets directory documentation
+│   ├── screenshots/              # UI & CLI diagnostic screenshots
+│   │   └── README.md             # Screenshots directory documentation
+│   └── README.md                 # Assets directory documentation
 ├── forensic-reports/             # Local Markdown forensic reports (ignored)
+│   ├── README.md                 # Forensic reports directory documentation
 │   └── YYYY-MM-DD-HHMM-forensic-report.md
 ├── system-checks/                # Privileged diagnostic shell scripts (.sh)
 │   ├── 01_01_system_check.sh     # System, kernel, suspend & logind checks
 │   ├── 02_01_firmware_check.sh   # BIOS, EC, Secure Boot, TPM2 & LVFS checks
-│   └── 03_01_nvme_raid_check.sh  # NVMe SMART, PCIe, mdadm RAID1 & Btrfs
+│   ├── 03_01_nvme_raid_check.sh  # NVMe SMART, PCIe, mdadm RAID1 & Btrfs
+│   └── README.md                 # Diagnostic scripts directory documentation
 ├── system-reports/               # Raw diagnostic text dumps (git-ignored)
 │   ├── 01_01_system_report.txt
 │   ├── 02_01_firmware_report.txt
-│   └── 03_01_nvme_raid_report.txt
+│   ├── 03_01_nvme_raid_report.txt
+│   └── README.md                 # System reports directory documentation
 ├── .gitignore                    # Excludes reports, workspace & secrets
 ├── AGENTS.md                     # Symlink to GEMINI.md for compatibility
 ├── GEMINI.md                     # Canonical agent instructions & playbooks
