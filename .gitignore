@@ -1,0 +1,139 @@
+# ==============================================================================
+# Git Ignore Rules: system-health-checks
+# Standards: Linux / POSIX, Hardware Telemetry, Sublime Text & Local Secrets
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Generated Diagnostic & Forensic Outputs (Host-Specific Telemetry)
+# ------------------------------------------------------------------------------
+# Raw privileged hardware/kernel dumps and persisted forensic evaluations
+/system-reports/
+/forensic-reports/
+
+# Guard against stray report files written outside target directories
+*[-_]report.txt
+*-forensic-report.md
+
+# ------------------------------------------------------------------------------
+# 2. Secrets, Credentials, Secure Boot Keys & Local Environment
+# ------------------------------------------------------------------------------
+# Environment configuration & Direnv
+.direnv/
+.envrc
+.env
+.env.*
+.env*.local
+*.env
+*.env.*
+env-variables.txt
+
+# Preserve public environment templates and examples
+!.env.example
+!.env.*.example
+!.envrc.example
+
+# SSH keys, configs & identity stores
+**/.ssh/id_*
+**/.ssh/*_id_*
+**/.ssh/known_hosts
+**/.ssh/config
+id_rsa*
+id_ecdsa*
+id_ed25519*
+
+# Certificates, private keys, MOK/UEFI Secure Boot keys & keystores
+*.pem
+*.key
+*.pkcs8
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.pub
+*.esl
+*.auth
+
+# GPG & Secret Keyrings
+secring.*
+*.gpg
+*.asc
+
+# ------------------------------------------------------------------------------
+# 3. Editor & IDE (Sublime Text)
+# ------------------------------------------------------------------------------
+# User workspace states (cursor locations, layout, active tabs)
+*.sublime-workspace
+
+# Project configuration (comment out if sharing project config)
+*.sublime-project
+
+# Package Control runtime artefacts & certificate bundles
+Package Control.last-run
+Package Control.ca-list
+Package Control.ca-bundle
+Package Control.system-ca-bundle
+Package Control.merged-ca-bundle
+Package Control.user-ca-bundle
+Package Control.cache/
+Package Control.ca-certs/
+oscrypto-ca-bundle.crt
+
+# Sublime cache, session data & sensitive plugin settings
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.cache
+bh_unicode_properties.cache
+GitHub.sublime-settings
+sftp-config.json
+sftp-config-alt*.json
+
+# ------------------------------------------------------------------------------
+# 4. Operating System & Filesystem (Linux / POSIX)
+# ------------------------------------------------------------------------------
+# Editor recovery, lock files, backups & auto-saves
+*~
+*.swp
+*.swo
+*.bak
+*.orig
+.#*
+\#*#
+
+# Network & filesystem artefacts
+.fuse_hidden*
+.nfs*
+
+# Desktop environment metadata, thumbnails & trash
+.directory
+.Trash-*
+.thumbnails/
+
+# Process & kernel dumps
+core
+core.*
+vgcore.*
+vmcore*
+
+# ------------------------------------------------------------------------------
+# 5. Local Runtime, Logs & Ephemeral Scratch
+# ------------------------------------------------------------------------------
+# Anchored ephemeral root directories (prevents matching nested source folders)
+/tmp/
+/temp/
+/scratch/
+
+# Runtime & diagnostic log artefacts
+*.log
+*.tmp
+*.out
+*.pid
+*.seed
+*.retry
+
+# ------------------------------------------------------------------------------
+# 6. Additional IDEs
+# ------------------------------------------------------------------------------
+.vscode/
+.idea/
