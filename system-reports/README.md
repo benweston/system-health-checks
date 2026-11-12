@@ -2,6 +2,6 @@
 
 <div align="justify">
 
-> Raw privileged diagnostic text dumps (`*_report.txt`).   
+> Raw privileged diagnostic text dumps (`*_report.txt`) contents are Git-ignored.   
 
 </div>
