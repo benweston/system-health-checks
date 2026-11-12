@@ -159,6 +159,6 @@ shellcheck -S warning run_checks.sh system-checks/*.sh
 
 <div align="justify">
 
-- **Documentation Standards:** Standardise on British English (`en-GB`) and enforce a strict `<= 80` character line width with 3 trailing spaces on all non-heading, non-table, and non-code-block text lines.   
+- **Documentation Standards:** Standardise on British English (`en-GB`) and enforce a strict `<= 80` character line width with 3 trailing spaces on all non-heading, non-table, and non-code-block text lines across forensic reports, agent instructions, and issue/release bodies (`README.md` is exempt from hard 80-column line breaks where `<div align="justify">` blocks require unwrapped single-line paragraphs and list items).   
 
 </div>

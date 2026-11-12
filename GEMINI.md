@@ -57,6 +57,7 @@ system-health-checks/
 │   └── 03_01_nvme_raid_report.txt
 ├── .gitignore                    # Excludes reports, workspace & secrets
 ├── run_checks.sh                 # Root master runner for all check scripts
+├── README.md                     # Project overview & operator documentation
 ├── GEMINI.md                     # Canonical instructions & playbooks
 └── AGENTS.md                     # Symlink to GEMINI.md for compatibility
 ```
@@ -359,7 +360,7 @@ both core evaluation questions:
   intact unless refactoring is explicitly requested.   
 - **Markdown 80-Column Line Width & Hard Line Breaks:** Across all Markdown   
   files, forensic report artifacts, documentation, and GitHub issue/release   
-  bodies:   
+  bodies (except `README.md`; see exception below):   
   - Enforce hard line breaks at a maximum width of **80 characters** per   
     line (including tables, diagrams, and code blocks; place long   
     unbreakable `file://` links on dedicated bullet lines).   
@@ -368,6 +369,12 @@ both core evaluation questions:
     blockquotes) by appending **3 trailing spaces** (`   `) at the end of   
     each line (so visible text is `<= 77` characters plus `3` trailing   
     spaces).   
+  - **Root `README.md` Exception:** `README.md` wraps prose, lists,   
+    blockquotes, and tables in `<div align="justify">` blocks (without   
+    `---` section dividers) and keeps each paragraph or list item on a   
+    single unwrapped line ending with `3` trailing spaces (`   `) so GitHub   
+    renders full-width justification cleanly; fenced code blocks in   
+    `README.md` still remain `<= 80` characters per line.   
 
 ---
 
